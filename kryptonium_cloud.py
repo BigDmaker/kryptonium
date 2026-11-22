@@ -49,7 +49,7 @@ def save_processed(p_list):
     except Exception as e:
         print(f"Fehler beim Speichern von processed_homeworks: {e}")
 
-def send_discord(content, file_path=None):
+def send_discord(content, file_path=None, embeds=None):
     if not WEBHOOK_URL:
         print("[Discord] Kein Webhook konfiguriert!")
         return
@@ -58,6 +58,9 @@ def send_discord(content, file_path=None):
         "avatar_url": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=128&q=80",
         "content": content
     }
+    if embeds:
+        payload["embeds"] = embeds
+
     if file_path and os.path.exists(file_path):
         with open(file_path, "rb") as f:
             files = {"file": (os.path.basename(file_path), f, "application/pdf")}
@@ -239,23 +242,36 @@ def main():
             print(f"\n--- Bearbeite neue Aufgabe: {subject_name} ({due_fmt}) ---")
             iserv_mat = get_iserv_subject_material(page, subject_name, hw_text)
 
+            # Embed-Infos und Überschrift vorbereiten
+            def make_info_message(student_target, version_label):
+                return (
+                    f"📚 **NEUE HAUSAUFGABE BEARBEITET**\n"
+                    f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+                    f"👤 **Für wen:** {student_target}\n"
+                    f"📖 **Fach:** `{subject_name}`\n"
+                    f"📅 **Fällig am:** **{due_fmt}**\n"
+                    f"📝 **Thema / Aufgabe:** {clean_topic}\n"
+                    f"✨ **Version:** {version_label}\n"
+                    f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+                )
+
             # 1. Deniz Variante 1
             h1 = generate_student_html(subject_name, clean_topic, due_fmt, hw_text, iserv_mat, "Deniz Tursun", "Variante 1")
             p1 = f"output/{due_raw}_{subject_name}_Deniz_Var1.pdf"
             if h1 and create_one_page_pdf(page, h1, p1):
-                send_discord(f"**[Cloud 24/7 &bull; Deniz Var 1] {subject_name}** (Fällig: {due_fmt})", p1)
+                send_discord(make_info_message("Deniz Tursun", "Variante 1 (Standard Wortwahl &bull; ohne Kommas)"), p1)
 
             # 2. Deniz Variante 2
             h2 = generate_student_html(subject_name, clean_topic, due_fmt, hw_text, iserv_mat, "Deniz Tursun", "Variante 2 andere Worte")
             p2 = f"output/{due_raw}_{subject_name}_Deniz_Var2.pdf"
             if h2 and create_one_page_pdf(page, h2, p2):
-                send_discord(f"**[Cloud 24/7 &bull; Deniz Var 2] {subject_name}** (Fällig: {due_fmt})", p2)
+                send_discord(make_info_message("Deniz Tursun", "Variante 2 (Alternative Formulierung &bull; ohne Kommas)"), p2)
 
             # 3. Bruno
             h3 = generate_student_html(subject_name, clean_topic, due_fmt, hw_text, iserv_mat, "Bruno", "Eigener Schüler Bruno")
             p3 = f"output/{due_raw}_{subject_name}_Bruno.pdf"
             if h3 and create_one_page_pdf(page, h3, p3):
-                send_discord(f"**[Cloud 24/7 &bull; FÜR BRUNO] {subject_name}** (Fällig: {due_fmt})", p3)
+                send_discord(make_info_message("Bruno", "Eigene Version für Bruno (Eigenständiger Text & Name)"), p3)
 
             processed.append(hw_id)
             save_processed(processed)
