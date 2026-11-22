@@ -1,0 +1,7 @@
+# Ignoriere lokale Configs und Temp-Dateien falls gewünscht
+__pycache__/
+*.pyc
+cache/
+*.log
+
+config.json
