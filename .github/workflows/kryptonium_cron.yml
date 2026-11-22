@@ -26,6 +26,8 @@ jobs:
           playwright install-deps
 
       - name: Kryptonium Scanner & Generator ausführen
+        env:
+          CONFIG_JSON: ${{ secrets.CONFIG_JSON }}
         run: |
           python kryptonium_cloud.py
 
