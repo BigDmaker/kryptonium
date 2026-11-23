@@ -104,8 +104,12 @@ async function decryptData(encryptedObj, password) {
 async function attemptUnlock(password) {
   try {
     lockError.classList.add('hidden');
-    const response = await fetch('data/encrypted_status.json?nocache=' + Date.now());
-    if (!response.ok) throw new Error("Status-Datei nicht gefunden");
+    // Suche Datei entweder unter data/... oder relativ
+    let response = await fetch('./data/encrypted_status.json?nocache=' + Date.now());
+    if (!response.ok) {
+      response = await fetch('data/encrypted_status.json?nocache=' + Date.now());
+    }
+    if (!response.ok) throw new Error("HTTP Fehler " + response.status);
     const encryptedJson = await response.json();
     const data = await decryptData(encryptedJson, password);
 
@@ -117,6 +121,7 @@ async function attemptUnlock(password) {
     mainDashboard.classList.remove('hidden');
   } catch (err) {
     console.error("Entschlüsselung fehlgeschlagen:", err);
+    lockError.innerText = "Fehler: " + (err.message || "Falsches Passwort");
     lockError.classList.remove('hidden');
   }
 }
