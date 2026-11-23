@@ -1,7 +1,22 @@
-# Ignoriere lokale Configs und Temp-Dateien falls gewünscht
+# Lokale Umgebungsvariablen & Zugangsdaten
+.env
+*.env
+!*.example
+config.json
+
+# Python & Virtuelle Umgebungen
 __pycache__/
 *.pyc
+*.pyo
+venv/
+.venv/
+env/
+
+# Temporäre Daten, Logs & Cache
 cache/
+output/
 *.log
 
-config.json
+# OS-spezifische Dateien
+.DS_Store
+Thumbs.db

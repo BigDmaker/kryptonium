@@ -51,5 +51,5 @@ jobs:
           git config --global user.name "Kryptonium Bot"
           git config --global user.email "kryptonium@bot.local"
           git add data/bot_state.json docs/data/encrypted_status.json processed_homeworks.json || true
-          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: update bot state & dashboard [skip ci]" && git push)
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: update bot state & dashboard [skip ci]" && git pull --rebase origin main || true && git push origin main)
         continue-on-error: true

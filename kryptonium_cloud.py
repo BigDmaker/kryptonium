@@ -101,12 +101,15 @@ def log(msg, level="INFO"):
 # ==============================================================================
 def load_bot_state():
     os.makedirs(os.path.dirname(STATE_FILE), exist_ok=True)
+    state = {}
     if os.path.exists(STATE_FILE):
         try:
             with open(STATE_FILE, "r", encoding="utf-8") as f:
-                return json.load(f)
+                state = json.load(f)
         except Exception as e:
             log(f"Fehler beim Laden von {STATE_FILE}: {e}", "WARNING")
+            state = {}
+
     # Migration von alter processed_homeworks.json falls vorhanden
     legacy_ids = []
     if os.path.exists("processed_homeworks.json"):
@@ -115,12 +118,16 @@ def load_bot_state():
                 legacy_ids = json.load(f)
         except Exception:
             pass
-    return {
+
+    default_state = {
         "processed_hashes": [],
         "processed_ids": [str(x) for x in legacy_ids],
         "tasks_history": [],
         "runs_history": []
     }
+    for k, v in default_state.items():
+        state.setdefault(k, v)
+    return state
 
 def save_bot_state(state):
     try:
@@ -131,7 +138,7 @@ def save_bot_state(state):
         log(f"Fehler beim Speichern von {STATE_FILE}: {e}", "ERROR")
 
 def compute_task_hash(subject, due_date, text):
-    raw = f"{subject.strip()}_{str(due_date).strip()}_{text.strip()}"
+    raw = f"{str(subject or '').strip()}_{str(due_date or '').strip()}_{str(text or '').strip()}"
     return hashlib.sha256(raw.encode("utf-8")).hexdigest()
 
 # ==============================================================================
@@ -228,12 +235,12 @@ def fetch_untis_homeworks():
     normalized = []
     for h in homeworks:
         lesson = lessons.get(h.get("lessonId"), {})
-        short_s = lesson.get("subject", "")
+        short_s = lesson.get("subject") or ""
         # Zuordnung: Erst Kürzel, dann sub_map
         subject_name = SUBJECT_MAP.get(short_s) or sub_map.get(lesson.get("subjectId")) or short_s or "Hausaufgabe"
-        due_raw = str(h.get("dueDate", ""))
-        due_fmt = f"{due_raw[6:8]}.{due_raw[4:6]}.{due_raw[:4]}" if len(due_raw) == 8 else due_raw
-        text = h.get("text", "").strip()
+        due_raw = str(h.get("dueDate") or "")
+        due_fmt = f"{due_raw[6:8]}.{due_raw[4:6]}.{due_raw[:4]}" if len(due_raw) == 8 else (due_raw or "-")
+        text = (h.get("text") or "").strip()
 
         normalized.append({
             "id": str(h.get("id")),
@@ -485,12 +492,12 @@ def main():
                 page = browser.new_page()
 
                 for hw in homeworks:
-                    hw_id = hw["id"]
-                    subject_name = hw["subject"]
-                    due_fmt = hw["due_fmt"]
-                    due_raw = hw["due_raw"]
-                    hw_text = hw["text"]
-                    clean_topic = hw_text.split("\n")[0][:45]
+                    hw_id = str(hw.get("id"))
+                    subject_name = hw.get("subject") or "Hausaufgabe"
+                    due_fmt = hw.get("due_fmt") or "-"
+                    due_raw = hw.get("due_raw") or ""
+                    hw_text = hw.get("text") or ""
+                    clean_topic = hw_text.split("\n")[0][:45].strip() if hw_text else "Hausaufgabe"
 
                     # Deduplizierung per SHA-256 Hash
                     task_hash = compute_task_hash(subject_name, due_raw, hw_text)
