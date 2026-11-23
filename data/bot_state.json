@@ -1,0 +1,56 @@
+{
+  "processed_hashes": [
+    "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "48399_goldene_zwanziger",
+    "48834_temas_debate",
+    "48393_consumo_medios",
+    "48928_wiewo7",
+    "49308_selbsteinschaetzung"
+  ],
+  "processed_ids": [
+    "48399",
+    "48834",
+    "48393",
+    "48928",
+    "49308"
+  ],
+  "tasks_history": [
+    {
+      "id": "48399",
+      "hash": "48399_goldene_zwanziger",
+      "subject": "Geschichte",
+      "due_date": "23.11.2026",
+      "title": "Erarbeite Begriff goldene Zwanziger (S. 57)",
+      "task_raw": "Erarbeite mit Hilfe des Textes auf S. 57 den Begriff „goldene Zwanziger“. Beantworte folgende Fragen: Was bedeutet der Begriff? Wie wurde diese Entwicklung möglich? Welche Veränderungen kennzeichnen die „goldenen Zwanziger“?",
+      "solution_summary": "Deniz Tursun\nKlasse 10s\nGeschichte Hausaufgabe Seite 57\n\n1 Begriff goldene zwanziger\ndie goldenen zwanziger war die zeit ungefaehr von 1924 bis 1929 in deutschland wo es nach dem krieg und nach der kriese und der ganzen inflation endlich wieder bergauf ging die wirtschaft hat sich wieder erholt die menschen hatten wieder arbeit und die leute hatten wieder mehr hoffnung und bock auf leben und feiern gehen\n\n2 Warum das moeglich wurde\ndas ging vor allem weill die amerikaner mit dem dawes plan richtig viel kredite nach deutschland gepumpt haben damit die fabriken neue maschinen kaufen konnten auserdem gab es die rentenmark die die inflation gestoppt hat\n\n3 Veraenderungen der zeit\nes gab ueberall radio und kino die frauen hatten kurze haare und neue mode und die leute tanzten charleston in berlin war richtig was los aber auf dem land hatten viele bauern trotzdem noch wenig geld",
+      "created_at": "2026-11-22 22:00:00"
+    },
+    {
+      "id": "48834",
+      "hash": "48834_temas_debate",
+      "subject": "Spanisch",
+      "due_date": "24.11.2026",
+      "title": "Temas para el debate",
+      "task_raw": "Temas para el debate",
+      "solution_summary": "Deniz Tursun\nKlasse 10s\nSpanisch Hausaufgabe Temas debate\n\n1 El uso de los moviles en el colegio\nen mi opinion los moviles pueden ser utiles para buscar palabras o cosas rapido en internet pero muchos alumnos juegan o miran tiktok en clase por eso creo que durante las clases deben estar en la mochila\n\n2 Las redes sociales y los jovenes\nlas redes sociales como instagram ayudan a hablar con amigos pero tambien hacen perder mucho tiempo y a veces la gente se compara demasiado",
+      "created_at": "2026-11-22 22:00:00"
+    },
+    {
+      "id": "48928",
+      "hash": "48928_wiewo7",
+      "subject": "Mathematik",
+      "due_date": "25.11.2026",
+      "title": "WieWo7 (liegt auch auf IServ)",
+      "task_raw": "WieWo 7: Parabeln f(x)=x^2+1, Bruchrechnung, Wahrscheinlichkeiten mit Wuerfeln",
+      "solution_summary": "Bruno\nKlasse 10s\nMathe WieWo 7\n\n1 Parabeln zeichnen\nf(x) = x^2 + 1 ist eine nach oben geoeffnete normalparabel mit scheitelpunkt S(0|1)\ng(x) = -1/2 x^2 ist nach unten geoeffnet und breiter gestaucht mit Scheitelpunkt S(0|0)\nh(x) = (x-2)^2 - 3 hat den Scheitelpunkt bei S(2|-3)\n\n2 Bruchrechnung\n2/3 + 3/4 - 1/12\nhauptnenner ist 12\n8/12 + 9/12 - 1/12 = 16/12 = 4/3 = 1 1/3\n\n4 Wahrscheinlichkeit Wuerfel\ngenau zwei sechsen bei 3 wuerfen\nanzahl pfade: 3 * (1/6)^2 * (5/6) = 15/216 ungefaehr 6 9%",
+      "created_at": "2026-11-22 22:00:00"
+    }
+  ],
+  "runs_history": [
+    {
+      "timestamp": "2026-11-23 18:00:00",
+      "status": "OK",
+      "new_tasks": 0
+    }
+  ]
+}

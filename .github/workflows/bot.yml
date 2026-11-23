@@ -1,0 +1,55 @@
+name: Kryptonium 24/7 Cloud Assistant & Dashboard
+
+on:
+  schedule:
+    # Läuft alle 6 Stunden automatisch auf GitHub-Servern
+    - cron: '0 */6 * * *'
+  workflow_dispatch: # Ermöglicht manuelles Starten mit 1 Klick auf GitHub
+
+permissions:
+  contents: write
+
+jobs:
+  run-kryptonium:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code auschecken
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Python 3.11 aufsetzen
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Abhängigkeiten & Playwright installieren
+        run: |
+          pip install -r requirements.txt
+          playwright install chromium
+          playwright install-deps
+
+      - name: Kryptonium Scanner, Solver & Encryptor ausführen
+        env:
+          CONFIG_JSON: ${{ secrets.CONFIG_JSON }}
+          UNTIS_SERVER: ${{ secrets.UNTIS_SERVER }}
+          UNTIS_SCHOOL: ${{ secrets.UNTIS_SCHOOL }}
+          UNTIS_USERNAME: ${{ secrets.UNTIS_USERNAME }}
+          UNTIS_PASSWORD: ${{ secrets.UNTIS_PASSWORD }}
+          ISERV_SERVER: ${{ secrets.ISERV_SERVER }}
+          ISERV_USERNAME: ${{ secrets.ISERV_USERNAME }}
+          ISERV_PASSWORD: ${{ secrets.ISERV_PASSWORD }}
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          DASHBOARD_PASSWORD: ${{ secrets.DASHBOARD_PASSWORD }}
+        run: |
+          python kryptonium_cloud.py
+
+      - name: State & verschlüsseltes Dashboard speichern (Auto-Commit)
+        run: |
+          git config --global user.name "Kryptonium Bot"
+          git config --global user.email "kryptonium@bot.local"
+          git add data/bot_state.json docs/data/encrypted_status.json processed_homeworks.json || true
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: update bot state & dashboard [skip ci]" && git push)
+        continue-on-error: true
