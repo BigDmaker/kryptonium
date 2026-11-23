@@ -335,23 +335,34 @@ def fetch_iserv_calendar_exams(page):
                 time_str = l
                 if i + 1 < len(lines):
                     title_line = lines[i+1]
-                    if "Klasse 10s" in title_line and ("klausur" in title_line.lower() or "arbeit" in title_line.lower()):
+                    is_klausur = any(k in title_line.lower() for k in ["klausur", "arbeit", "nachschreiben", "prüfung", "sprechprüfung"])
+                    is_for_10s = any(g in title_line for g in ["10s", "10", "JG 5-11", "JG 9/10", "WPU"])
+                    if is_klausur and is_for_10s:
                         clean_title = title_line.split(" - Klasse 10s")[0].split(" | Klausurplan")[0].strip()
                         subj = "Sonstiges"
-                        if "powi" in clean_title.lower() or "politik" in clean_title.lower():
+                        tl_lower = clean_title.lower()
+                        if "powi" in tl_lower or "politik" in tl_lower:
                             subj = "Politik"
-                        elif "erdkunde" in clean_title.lower():
+                        elif "erdkunde" in tl_lower:
                             subj = "Erdkunde"
-                        elif "englisch" in clean_title.lower():
+                        elif "englisch" in tl_lower:
                             subj = "Englisch"
-                        elif "informatik" in clean_title.lower():
+                        elif "informatik" in tl_lower:
                             subj = "Informatik"
-                        elif "musik" in clean_title.lower():
-                            subj = "Musik"
-                        elif "physik" in clean_title.lower():
-                            subj = "Physik"
-                        elif "wpu" in clean_title.lower():
+                        elif "wpu" in tl_lower:
                             subj = "Wahlpflicht"
+                        elif "geschicht" in tl_lower:
+                            subj = "Geschichte"
+                        elif "deutsch" in tl_lower:
+                            subj = "Deutsch"
+                        elif "mathe" in tl_lower:
+                            subj = "Mathematik"
+                        elif "musik" in tl_lower:
+                            subj = "Musik"
+                        elif "physik" in tl_lower:
+                            subj = "Physik"
+                        elif "nachschreiben" in tl_lower:
+                            subj = "Zentraltermin"
 
                         exams.append({
                             "day": current_day,
@@ -525,7 +536,7 @@ def update_encrypted_dashboard(state, overall_status="ONLINE / OK", untis_ok=Tru
                 "total_runs": total_runs
             },
             "tasks": state.get("tasks_history", [])[-30:],  # Die letzten 30 Aufgaben
-            "exams": exams or [],
+            "exams": exams if exams else state.get("upcoming_exams", []),
             "logs": RUN_LOGS[-50:],  # Letzte 50 Zeilen
             "repo_url": "https://github.com/BigDmaker/kryptonium/actions"
         }
@@ -649,7 +660,9 @@ def main():
                 upcoming_exams = []
                 try:
                     upcoming_exams = fetch_iserv_calendar_exams(page)
-                    for ex in upcoming_exams:
+                    if upcoming_exams:
+                        state["upcoming_exams"] = upcoming_exams
+                    for ex in (upcoming_exams or state.get("upcoming_exams", [])):
                         if ex.get("day") == 24 and "powi" in ex.get("title", "").lower():
                             log(f"⚠️ [Klausur-Radar] Morgen anstehend: {ex.get('title')} um {ex.get('time')} Uhr!", "WARNING")
                 except Exception as ce:

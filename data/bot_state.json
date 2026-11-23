@@ -72,39 +72,111 @@
   "upcoming_exams": [
     {
       "day": 24,
+      "month": 11,
       "time": "11:30",
       "title": "PoWi #1 (Klassenarbeit)",
       "subject": "Politik",
       "date_fmt": "Dienstag, 24.11.2026",
       "room": "Raum 230",
-      "topics": "Wirtschaftsordnungen, 5 Zweige der Sozialversicherung, Wahlen Göttingen"
+      "topics": "Wirtschaftsordnungen, 5 Zweige der Sozialversicherung, Wahlen Göttingen",
+      "type": "Klassenarbeit",
+      "urgent": true
     },
     {
       "day": 26,
+      "month": 11,
       "time": "07:50",
       "title": "WPU 9/10 - Arbeit 1 (Klausur)",
       "subject": "Wahlpflicht",
       "date_fmt": "Donnerstag, 26.11.2026",
       "room": "Raum 234",
-      "topics": "Informatik / Wahlpflicht Modul 1"
+      "topics": "Informatik / Wahlpflicht Modul 1: Algorithmen, Datenstrukturen & Kryptografie",
+      "type": "Klassenarbeit",
+      "urgent": false
+    },
+    {
+      "day": 27,
+      "month": 11,
+      "time": "13:50",
+      "title": "Nachschreiben JG 5-11",
+      "subject": "Zentraltermin",
+      "date_fmt": "Freitag, 27.11.2026",
+      "room": "Zentraler Nachschreiberaum",
+      "topics": "Zentraler Nachschreibetermin Jahrgänge 5 bis 11",
+      "type": "Nachschreibetermin",
+      "urgent": false
     },
     {
       "day": 1,
+      "month": 12,
       "time": "09:40",
       "title": "Klausur Erdkunde (Klausur)",
       "subject": "Erdkunde",
       "date_fmt": "Dienstag, 01.12.2026",
       "room": "Raum 230",
-      "topics": "Globalisierung & Ressourcen"
+      "topics": "Globalisierung, Entwicklungsdisparitäten (HDI, Gini) & Ressourcen",
+      "type": "Klausur",
+      "urgent": false
     },
     {
       "day": 2,
+      "month": 12,
       "time": "07:50",
       "title": "Sprechprüfung Englisch 10",
       "subject": "Englisch",
       "date_fmt": "Mittwoch, 02.12.2026",
       "room": "Raum 232",
-      "topics": "Oral Exam Year 10"
+      "topics": "Oral Exam Year 10: Picture Description, Partner Discussion & Role Play",
+      "type": "Mündliche Prüfung",
+      "urgent": false
+    },
+    {
+      "day": 4,
+      "month": 12,
+      "time": "07:50",
+      "title": "Musik 10s Nachschreibtermin",
+      "subject": "Musik",
+      "date_fmt": "Freitag, 04.12.2026",
+      "room": "Raum 2M1",
+      "topics": "Nachschreibetermin Musik 10s (Epochen, Analyse, Harmonielehre)",
+      "type": "Nachschreibetermin",
+      "urgent": false
+    },
+    {
+      "day": 7,
+      "month": 12,
+      "time": "11:30",
+      "title": "Geschichtsarbeit (Klausur)",
+      "subject": "Geschichte",
+      "date_fmt": "Montag, 07.12.2026",
+      "room": "Raum 037",
+      "topics": "Weimarer Republik 1918–1933, Krisenjahr 1923, Golden Twenties & Untergang",
+      "type": "Klassenarbeit",
+      "urgent": false
+    },
+    {
+      "day": 11,
+      "month": 12,
+      "time": "07:50",
+      "title": "Deutscharbeit Nr. 2 (Klausur)",
+      "subject": "Deutsch",
+      "date_fmt": "Freitag, 11.12.2026",
+      "room": "Raum 230",
+      "topics": "Sachtextanalyse & lineare Erörterung, Corpus Delicti & METHODE",
+      "type": "Klassenarbeit",
+      "urgent": false
+    },
+    {
+      "day": 15,
+      "month": 12,
+      "time": "11:30",
+      "title": "PoWi Nachschreiben / Nachtermin",
+      "subject": "Politik",
+      "date_fmt": "Dienstag, 15.12.2026",
+      "room": "Raum 230 / Nachschreiberaum",
+      "topics": "Nachschreibtermin PoWi #1 (Wirtschaftsordnungen, Sozialversicherung)",
+      "type": "Nachschreibetermin",
+      "urgent": false
     }
   ]
 }
