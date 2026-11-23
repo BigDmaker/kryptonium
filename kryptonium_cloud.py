@@ -79,6 +79,15 @@ SUBJECT_MAP = {
     "MU": "Musik", "RE": "Religion", "SP": "Sport", "WP9/10": "Wahlpflicht"
 }
 
+# OFFIZIELLE LEHRWERKE & SCHULBÜCHER DER KLASSE 10s (HG GÖTTINGEN)
+TEXTBOOKS = {
+    "Mathematik": "Fundamente der Mathematik 10 (Gymnasium Niedersachsen, Cornelsen Verlag)",
+    "Geschichte": "Zeit für Geschichte 9/10 (Gymnasium Niedersachsen, Westermann / Schroedel Verlag)",
+    "Spanisch": "¡Qué pasa! 3 (Spanisch als 3. Fremdsprache, Diesterweg / Westermann Verlag)",
+    "Deutsch": "Texte, Themen und Strukturen / Juli Zeh: Corpus Delicti (10. Klasse Gymnasium)",
+    "Physik": "Dorn Bader Physik 9/10 (Gymnasium Niedersachsen)"
+}
+
 # Logger im Speicher für das Dashboard
 RUN_LOGS = []
 def log(msg, level="INFO"):
@@ -295,15 +304,22 @@ def generate_solution_html(subject, topic, due_date, task_text, material, studen
     """
     Erstellt das schülergerechte Dokument (genau 1x Deniz ODER 1x Bruno).
     STIL: Schlichtes 10.-Klasse Blatt, keine Kommas, keine Bullets/Striche.
+    Berücksichtigt exakt die offiziellen Lehrwerke der Klasse 10s am HG Göttingen.
     """
     is_bruno = "Bruno" in student_name
     bruno_instruction = "Schreibe als Bruno. Verwende eine eigenständige Wortwahl und andere Formulierungen damit es nicht abgeschrieben wirkt." if is_bruno else "Schreibe als Deniz."
+    textbook = TEXTBOOKS.get(subject, f"Standard Schulbuch 10. Klasse Gymnasium Niedersachsen für {subject}")
 
     prompt = f"""
-Du bist {student_name}, ein fauler Schüler der 10. Klasse (10s) am Gymnasium.
+Du bist {student_name}, ein fauler Schüler der 10. Klasse (10s) am Hainberg-Gymnasium Göttingen.
 Erstelle die schriftliche Hausaufgabe für {subject}. {bruno_instruction}
+
+OFFIZIELLES SCHULBUCH: {textbook}
 Aufgabe: {task_text}
-Material: {material if material else "Keins"}
+Zusatz-Material: {material if material else "Keins"}
+
+HINWEIS ZUR AUFGABENSTELLUNG:
+Falls in der Aufgabe eine Seitenzahl oder Aufgabennummer aus dem Buch genannt wird (z. B. S. 57, S. 217), beziehe dich exakt auf das Lehrwerk '{textbook}'. Löse genau die dort typischen mathematischen Aufgabenstellungen, historischen Quellenanalysen oder spanischen Grammatik- und Textaufgaben.
 
 REGELN:
 1. GANZ SCHLICHTES A4 BLATT wie in Word getippt. Absolut KEIN KI-Aussehen!
