@@ -68,5 +68,43 @@
       "status": "OK",
       "new_tasks": 0
     }
+  ],
+  "upcoming_exams": [
+    {
+      "day": 24,
+      "time": "11:30",
+      "title": "PoWi #1 (Klassenarbeit)",
+      "subject": "Politik",
+      "date_fmt": "Dienstag, 24.11.2026",
+      "room": "Raum 230",
+      "topics": "Wirtschaftsordnungen, 5 Zweige der Sozialversicherung, Wahlen Göttingen"
+    },
+    {
+      "day": 26,
+      "time": "07:50",
+      "title": "WPU 9/10 - Arbeit 1 (Klausur)",
+      "subject": "Wahlpflicht",
+      "date_fmt": "Donnerstag, 26.11.2026",
+      "room": "Raum 234",
+      "topics": "Informatik / Wahlpflicht Modul 1"
+    },
+    {
+      "day": 1,
+      "time": "09:40",
+      "title": "Klausur Erdkunde (Klausur)",
+      "subject": "Erdkunde",
+      "date_fmt": "Dienstag, 01.12.2026",
+      "room": "Raum 230",
+      "topics": "Globalisierung & Ressourcen"
+    },
+    {
+      "day": 2,
+      "time": "07:50",
+      "title": "Sprechprüfung Englisch 10",
+      "subject": "Englisch",
+      "date_fmt": "Mittwoch, 02.12.2026",
+      "room": "Raum 232",
+      "topics": "Oral Exam Year 10"
+    }
   ]
 }

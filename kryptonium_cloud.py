@@ -257,11 +257,17 @@ def fetch_untis_homeworks():
 # ==============================================================================
 # ISERV READ-ONLY SCANNER (PLAYWRIGHT HEADLESS MIT RETRIES)
 # ==============================================================================
+ISERV_FOLDER_MAP = {
+    "Politik": "Politik & Wirtschaft",
+    "Mathematik": "Mathe",
+    "Wahlpflicht": "Informatik"
+}
+
 def get_iserv_subject_material(page, subject_name, homework_text):
     """Sucht strikt nur im isolierten Fachordner der Klasse 10s auf IServ."""
     if not ISERV_USER or not ISERV_PW:
         return ""
-    folder_name = subject_name
+    folder_name = ISERV_FOLDER_MAP.get(subject_name, subject_name)
     log(f"[IServ] Lese strikt nur Fachordner: Klasse 10s/{folder_name}", "INFO")
 
     try:
@@ -303,6 +309,61 @@ def get_iserv_subject_material(page, subject_name, homework_text):
     except Exception as e:
         log(f"[IServ] Hinweis: Fachordner nicht verfügbar oder keine Dateien: {e}", "WARNING")
         return ""
+
+def fetch_iserv_calendar_exams(page):
+    """
+    Scant den IServ-Kalender & Klausurplan nach anstehenden Arbeiten der Klasse 10s.
+    """
+    if not ISERV_USER or not ISERV_PW:
+        return []
+
+    log("[IServ] Scanne Kalender & Klausurplan nach Klassenarbeiten...", "INFO")
+    exams = []
+    try:
+        page.goto(f"https://{ISERV_SERVER}/iserv/calendar/#overview", timeout=20000)
+        page.wait_for_load_state("networkidle", timeout=15000)
+
+        body_text = page.inner_text("body")
+        lines = [l.strip() for l in body_text.split("\n") if l.strip()]
+
+        current_day = None
+        import re
+        for i, l in enumerate(lines):
+            if l.isdigit() and 1 <= int(l) <= 31:
+                current_day = int(l)
+            elif current_day and re.match(r"^\d{1,2}:\d{2}$", l):
+                time_str = l
+                if i + 1 < len(lines):
+                    title_line = lines[i+1]
+                    if "Klasse 10s" in title_line and ("klausur" in title_line.lower() or "arbeit" in title_line.lower()):
+                        clean_title = title_line.split(" - Klasse 10s")[0].split(" | Klausurplan")[0].strip()
+                        subj = "Sonstiges"
+                        if "powi" in clean_title.lower() or "politik" in clean_title.lower():
+                            subj = "Politik"
+                        elif "erdkunde" in clean_title.lower():
+                            subj = "Erdkunde"
+                        elif "englisch" in clean_title.lower():
+                            subj = "Englisch"
+                        elif "informatik" in clean_title.lower():
+                            subj = "Informatik"
+                        elif "musik" in clean_title.lower():
+                            subj = "Musik"
+                        elif "physik" in clean_title.lower():
+                            subj = "Physik"
+                        elif "wpu" in clean_title.lower():
+                            subj = "Wahlpflicht"
+
+                        exams.append({
+                            "day": current_day,
+                            "time": time_str,
+                            "title": clean_title,
+                            "subject": subj,
+                            "raw": title_line
+                        })
+        log(f"[IServ] {len(exams)} Klausurtermin(e) im Kalender erkannt.", "INFO")
+    except Exception as e:
+        log(f"[IServ] Hinweis Kalender-Scan: {e}", "WARNING")
+    return exams
 
 # ==============================================================================
 # KI LÖSUNGS-GENERATOR (DENIZ & BRUNO)
@@ -432,7 +493,7 @@ def encrypt_dashboard_data(data_obj, password):
         "created_at": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     }
 
-def update_encrypted_dashboard(state, overall_status="ONLINE / OK", untis_ok=True, iserv_ok=True, discord_ok=True, new_count=0):
+def update_encrypted_dashboard(state, overall_status="ONLINE / OK", untis_ok=True, iserv_ok=True, discord_ok=True, new_count=0, exams=None):
     try:
         now = datetime.datetime.now()
         # Nächster Lauf: In 6 Stunden
@@ -464,6 +525,7 @@ def update_encrypted_dashboard(state, overall_status="ONLINE / OK", untis_ok=Tru
                 "total_runs": total_runs
             },
             "tasks": state.get("tasks_history", [])[-30:],  # Die letzten 30 Aufgaben
+            "exams": exams or [],
             "logs": RUN_LOGS[-50:],  # Letzte 50 Zeilen
             "repo_url": "https://github.com/BigDmaker/kryptonium/actions"
         }
@@ -583,6 +645,16 @@ def main():
                     })
                     save_bot_state(state)
 
+                # 3. IServ Kalender Klausur-Scan
+                upcoming_exams = []
+                try:
+                    upcoming_exams = fetch_iserv_calendar_exams(page)
+                    for ex in upcoming_exams:
+                        if ex.get("day") == 24 and "powi" in ex.get("title", "").lower():
+                            log(f"⚠️ [Klausur-Radar] Morgen anstehend: {ex.get('title')} um {ex.get('time')} Uhr!", "WARNING")
+                except Exception as ce:
+                    log(f"Fehler bei Klausur-Prüfung: {ce}", "WARNING")
+
             finally:
                 browser.close()
 
@@ -606,7 +678,8 @@ def main():
         untis_ok=untis_ok,
         iserv_ok=iserv_ok,
         discord_ok=discord_ok,
-        new_count=new_tasks_count
+        new_count=new_tasks_count,
+        exams=upcoming_exams if 'upcoming_exams' in locals() else []
     )
     log("=== KRYPTONIUM CLOUD RUNNER BEENDET ===", "INFO")
 

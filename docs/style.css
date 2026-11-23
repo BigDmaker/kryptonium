@@ -414,6 +414,78 @@ body::before {
   background: var(--border-subtle);
 }
 
+/* KLAUSUR-RADAR ALERT CARD */
+.exam-alert-card {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(217, 119, 6, 0.04) 100%);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 22px;
+  box-shadow: 0 4px 20px -2px rgba(245, 158, 11, 0.12);
+  flex-wrap: wrap;
+}
+
+.exam-alert-left {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.exam-alert-badge {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: #fbbf24;
+  background: rgba(245, 158, 11, 0.18);
+  padding: 2px 7px;
+  border-radius: 4px;
+  display: inline-block;
+  align-self: flex-start;
+  font-family: var(--font-mono);
+}
+
+.exam-alert-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.exam-alert-title b {
+  color: #fbbf24;
+}
+
+.exam-alert-sub {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.btn-exam-action {
+  background: #f59e0b;
+  color: #0b0d14;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.btn-exam-action:hover {
+  background: #d97706;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
 /* ==============================================================================
    SEGMENTED NAVIGATION TABS
    ============================================================================== */
@@ -587,6 +659,7 @@ body::before {
 .subj-geschichte { background: rgba(245, 158, 11, 0.12); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.25); }
 .subj-deutsch { background: rgba(168, 85, 247, 0.12); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.25); }
 .subj-physik { background: rgba(6, 182, 212, 0.12); color: #22d3ee; border: 1px solid rgba(6, 182, 212, 0.25); }
+.subj-politik { background: rgba(20, 184, 166, 0.12); color: #2dd4bf; border: 1px solid rgba(20, 184, 166, 0.25); }
 .subj-default { background: rgba(148, 163, 184, 0.12); color: #cbd5e1; border: 1px solid rgba(148, 163, 184, 0.2); }
 
 .task-due {

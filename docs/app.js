@@ -36,6 +36,55 @@ function showToast(message) {
 // Lernzettel-Bibliothek (Klasse 10s)
 const STUDY_MATERIALS = [
   {
+    subject: "Politik",
+    subjClass: "subj-politik",
+    title: "Klassenarbeit PoWi #1: Wirtschaftsordnungen, Sozialversicherung & Wahlen",
+    summary: "Exakt abgestimmt auf die IServ-Materialien der Klasse 10s für morgen (Dienstag, 24.11., 11:30 Uhr). Freie vs. Soziale Marktwirtschaft vs. Planwirtschaft, die 5 Säulen der Sozialversicherung und Kommunalwahlen Göttingen.",
+    content: `1. DIE DREI WIRTSCHAFTSORDNUNGEN IM DIREKTEN VERGLEICH:
+a) Freie Marktwirtschaft (Adam Smith / 'unsichtbare Hand'):
+- Grundidee: Der Einzelne strebt nach persönlichem Gewinn und fördert dadurch automatisch das Gemeinwohl.
+- Rolle des Staates: Nachtwächterstaat (nur Schutz von Eigentum, Rechtsordnung, äußere Sicherheit und Infrastruktur).
+- Preisbildung: Ausschließlich durch freies Spiel von Angebot und Nachfrage.
+- Probleme & Kritik: Monopol- und Kartellbildung, Verelendung und Ausbeutung von Arbeitern, keine soziale Absicherung, starke Krisenanfälligkeit.
+
+b) Planwirtschaft / Zentralverwaltungswirtschaft (Karl Marx / ehem. DDR, Nordkorea):
+- Grundidee: Staatliche Gleichheit und Abschaffung gesellschaftlicher Klassen.
+- Rolle des Staates: Eine zentrale staatliche Planungsbehörde bestimmt alles (Preise, Löhne, Produktionsmengen, Fünfjahrespläne).
+- Eigentum: Kein Privateigentum an Produktionsmitteln (Kollektiv- und Staatseigentum).
+- Probleme & Kritik: Bürokratie, Fehlallokation, Mangelwirtschaft und Schlangestehen, mangelnde Motivation und Innovationshemmung.
+
+c) Soziale Marktwirtschaft (Bundesrepublik Deutschland):
+- Architekten: Alfred Müller-Armack und Ludwig Erhard nach 1945 ('Wohlstand für alle').
+- Grundsatz: 'So viel Markt wie möglich, so viel Staat wie nötig'.
+- Verbindung: Freiheit des Marktes (Privateigentum, Gewerbefreiheit, Wettbewerb) kombiniert mit sozialem Ausgleich und Schutz der Schwachen.
+- Staatliche Säulen:
+  1. Wettbewerbsschutz: Bundeskartellamt bekämpft Monopole und verbotene Preisabsprachen.
+  2. Soziale Sicherung: Gesetzliche Sozialversicherungen, Bürgergeld, Wohngeld, Kindergeld.
+  3. Konjunktur- & Strukturpolitik: Subventionen und Krisenhilfen.
+  4. Arbeitsschutz: Kündigungsschutz, Mindestlohn, Mutterschutz, Arbeitszeitgesetze.
+
+2. DIE FÜNF ZWEIGE DER GESETZLICHEN SOZIALVERSICHERUNG (BISMARCK):
+- Krankenversicherung (1883): Übernahme von Arzt-, Klinik- und Medikamentenkosten, Krankengeld. Träger: Krankenkassen (AOK, TK etc.).
+- Unfallversicherung (1884): Schutz bei Arbeitsunfällen, Berufskrankheiten und Wegeunfällen (auch Schulweg). Träger: Berufsgenossenschaften. BESONDERHEIT: Wird zu 100% vom Arbeitgeber bezahlt!
+- Rentenversicherung (1889): Altersrente, Erwerbsminderungsrente. Träger: Deutsche Rentenversicherung. Funktioniert über den Generationenvertrag (Umlageverfahren: Beiträge der Aktiven zahlen die Renten der heutigen Ruheständler).
+- Arbeitslosenversicherung (1927): Arbeitslosengeld I, Arbeitsvermittlung und Weiterbildung. Träger: Bundesagentur für Arbeit.
+- Pflegeversicherung (1995): Pflegegeld und Sachleistungen bei Pflegebedürftigkeit im Alter. Träger: Pflegekassen.
+- FINANZIERUNGSPRINZIP: Paritätisch (50% Arbeitnehmer / 50% Arbeitgeber), Ausnahme Unfallversicherung (100% Arbeitgeber).
+- SOLIDARITÄTSPRINZIP: Die Beiträge richten sich prozentual nach dem Einkommen, die Leistungen aber nach dem tatsächlichen Bedarf.
+
+3. KOMMUNALPOLITIK & KOMMUNALWAHLEN (GÖTTINGEN / NIEDERSACHSEN):
+- Organe: Rat der Stadt Göttingen (Bürgervertretung) und Oberbürgermeister/in (Leitung der Verwaltung).
+- Besonderheit Wahlsystem Niedersachsen: Jeder Wähler hat 3 STIMMEN.
+- Kumulieren: Bis zu 3 Stimmen auf einen einzigen Wunsch-Kandidaten anhäufen.
+- Panaschieren: Stimmen auf Kandidaten verschiedener Parteien und Listen verteilen.
+
+4. MUSTER-ARGUMENTATION FÜR DIE KLAUSUR (ANFORDERUNGSBEREICH 3):
+Frage: 'Sollte der Staat bei steigenden Preisen (z.B. Energie oder Miete) mit Preisobergrenzen eingreifen?'
+- Pro: Schutz einkommensschwacher Familien vor Verarmung, Sicherung des Existenzminimums, Erfüllung des Sozialstaatsgebots (Art. 20 GG).
+- Contra: Gefahr von Fehlanreizen (weniger Wohnungsneubau durch Investoren), Marktverzerrung, hohe Kosten für den Steuerzahler.
+- Fazit: Befristete gezielte Entlastungen für Bedürftige sind besser als dauerhafte staatliche Höchstpreise, um den Preismechanismus nicht zu zerstören.`
+  },
+  {
     subject: "Physik",
     subjClass: "subj-physik",
     title: "Halbleiter, Dioden & Kaltleiter / Heißleiter",
@@ -88,8 +137,24 @@ function getSubjectClass(subject) {
   if (s.includes('geschicht')) return 'subj-geschichte';
   if (s.includes('deutsch')) return 'subj-deutsch';
   if (s.includes('physik')) return 'subj-physik';
+  if (s.includes('politik') || s.includes('powi')) return 'subj-politik';
   return 'subj-default';
 }
+
+window.openStudyTab = function(subject) {
+  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  const studyTabBtn = document.querySelector('[data-tab="tab-study"]');
+  const studyPane = document.getElementById('tab-study');
+  if (studyTabBtn) studyTabBtn.classList.add('active');
+  if (studyPane) studyPane.classList.add('active');
+  const searchInput = document.getElementById('studySearchInput');
+  if (searchInput) {
+    searchInput.value = subject || '';
+    renderStudyMaterials((subject || '').toLowerCase());
+  }
+  showToast("Lernzettel für " + (subject || "Klausur") + " geöffnet");
+};
 
 // Base64 & Web Crypto AES-256-GCM
 function base64ToArrayBuffer(base64) {
