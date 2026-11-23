@@ -307,19 +307,36 @@ def get_iserv_subject_material(page, subject_name, homework_text):
 # ==============================================================================
 # KI LÖSUNGS-GENERATOR (DENIZ & BRUNO)
 # ==============================================================================
-def generate_solution_html(subject, topic, due_date, task_text, material, student_name="Deniz Tursun"):
+def generate_solution_html(subject, topic, due_date, task_text, material, student_name="Deniz Tursun", other_solution=None):
     """
     Erstellt das schülergerechte Dokument (genau 1x Deniz ODER 1x Bruno).
     STIL: Schlichtes 10.-Klasse Blatt, keine Kommas, keine Bullets/Striche.
-    Berücksichtigt exakt die offiziellen Lehrwerke der Klasse 10s am HG Göttingen.
+    Nutzt echte deutsche Umlaute (ä, ö, ü, ß).
+    Garantiert völlig unterschiedliche Texte zwischen Deniz und Bruno.
     """
     is_bruno = "Bruno" in student_name
-    bruno_instruction = "Schreibe als Bruno. Verwende eine eigenständige Wortwahl und andere Formulierungen damit es nicht abgeschrieben wirkt." if is_bruno else "Schreibe als Deniz."
     textbook = TEXTBOOKS.get(subject, f"Standard Schulbuch 10. Klasse Gymnasium Niedersachsen für {subject}")
 
+    if is_bruno:
+        persona_block = f"""
+Du bist Bruno, ein Schüler der 10. Klasse (10s) am Hainberg-Gymnasium Göttingen.
+Dein Schreibstil ist eigenständig, nutzt andere Erklärungsansätze und andere Satzanfänge als Deniz.
+{f'''WICHTIGSTE REGEL ZUR UNTERSCHEIDBARKEIT:
+Deniz hat die Aufgabe bereits wie folgt formuliert:
+\"\"\"
+{other_solution[:800]}
+\"\"\"
+Deine Lösung MUSS sich komplett von Deniz unterscheiden! Wähle ganz andere Satzstrukturen, andere Satzanfänge (z.B. "aus meiner sicht", "vor allem fällt auf", "wenn man das betrachtet"), andere Worte und einen anderen Aufbau, damit kein Lehrer Ähnlichkeiten bemerkt!''' if other_solution else "Schreibe eigenständig mit deinen eigenen Worten."}
+"""
+    else:
+        persona_block = f"""
+Du bist Deniz Tursun, ein Schüler der 10. Klasse (10s) am Hainberg-Gymnasium Göttingen.
+Dein Schreibstil ist direkt, pragmatisch und auf den Punkt. Kurze klare Sätze (z.B. "im grunde", "einfach gesagt", "meiner meinung nach").
+"""
+
     prompt = f"""
-Du bist {student_name}, ein fauler Schüler der 10. Klasse (10s) am Hainberg-Gymnasium Göttingen.
-Erstelle die schriftliche Hausaufgabe für {subject}. {bruno_instruction}
+{persona_block}
+Erstelle die schriftliche Hausaufgabe für {subject}.
 
 OFFIZIELLES SCHULBUCH: {textbook}
 Aufgabe: {task_text}
@@ -328,13 +345,14 @@ Zusatz-Material: {material if material else "Keins"}
 HINWEIS ZUR AUFGABENSTELLUNG:
 Falls in der Aufgabe eine Seitenzahl oder Aufgabennummer aus dem Buch genannt wird (z. B. S. 57, S. 217), beziehe dich exakt auf das Lehrwerk '{textbook}'. Löse genau die dort typischen mathematischen Aufgabenstellungen, historischen Quellenanalysen oder spanischen Grammatik- und Textaufgaben.
 
-REGELN:
+STRIKTE FORMALREGELN:
 1. GANZ SCHLICHTES A4 BLATT wie in Word getippt. Absolut KEIN KI-Aussehen!
-2. KEINE PUNKTE ODER STRICHE! Keine Aufzählungszeichen, keine Bullets, keine Gedankenstriche.
-3. NIEMALS KOMMAS SETZEN! Kein einziges Komma im Text!
-4. Tippfehler und flapsige Sprache einbauen (weill, kriese, das statt dass, auserdem).
-5. Kopfzeile: {student_name}<br>Klasse 10s<br>{subject} Hausaufgabe {topic}
-6. Exakt 1 A4 Seite. Schriftart Arial, @page {{ size: A4; margin: 18mm 20mm; }}.
+2. KEINE PUNKTE ODER STRICHE! Keine Aufzählungszeichen, keine Bullets, keine Gedankenstriche als Listen.
+3. NIEMALS KOMMAS SETZEN! Kein einziges Komma im gesamten Text!
+4. ECHTE DEUTSCHE UMLAUTE NUTZEN: Nutze ganz normal ä, ö, ü, ß (z. B. "ungefähr", "möglich", "hätte", "Veränderungen", "groß", "können"). Schreibe NIEMALS "ae", "oe", "ue" statt Umlauten!
+5. Typische 10.-Klasse Sprache: Schülerhaft, gelegentlich flapsig (z.B. "weill", "das" statt "dass"), aber auf einer normalen deutschen Tastatur getippt (mit Umlauten).
+6. Kopfzeile: {student_name}<br>Klasse 10s<br>{subject} Hausaufgabe {topic}
+7. Exakt 1 A4 Seite. Schriftart Arial, @page {{ size: A4; margin: 18mm 20mm; }}.
 
 Antworte NUR mit HTML-Code (<!DOCTYPE html> bis </html>).
 """
@@ -533,20 +551,23 @@ def main():
                     if html_deniz and create_one_page_pdf(page, html_deniz, p_deniz):
                         send_discord(make_info("Deniz Tursun"), p_deniz)
 
-                    # 2. Bruno Lösung
-                    html_bruno = generate_solution_html(subject_name, clean_topic, due_fmt, hw_text, iserv_mat, "Bruno")
+                    # Text Deniz für Bruno-Prompt & Dashboard
+                    soup_deniz = BeautifulSoup(html_deniz, "html.parser") if html_deniz else None
+                    text_deniz = soup_deniz.get_text(separator="\n").strip() if soup_deniz else "Lösung Deniz erstellt."
+
+                    # 2. Bruno Lösung (erhält Deniz' Text, damit er komplett anders formuliert!)
+                    html_bruno = generate_solution_html(subject_name, clean_topic, due_fmt, hw_text, iserv_mat, "Bruno", other_solution=text_deniz)
                     p_bruno = f"output/{due_raw}_{subject_name}_Bruno.pdf"
                     if html_bruno and create_one_page_pdf(page, html_bruno, p_bruno):
                         send_discord(make_info("Bruno"), p_bruno)
+
+                    soup_bruno = BeautifulSoup(html_bruno, "html.parser") if html_bruno else None
+                    text_bruno = soup_bruno.get_text(separator="\n").strip() if soup_bruno else "Lösung Bruno erstellt."
 
                     # State aktualisieren
                     state["processed_hashes"].append(task_hash)
                     if hw_id not in state["processed_ids"]:
                         state["processed_ids"].append(hw_id)
-
-                    # Lösungstext für Dashboard aufbereiten (Textversion)
-                    soup_deniz = BeautifulSoup(html_deniz, "html.parser") if html_deniz else None
-                    summary_text = soup_deniz.get_text(separator="\n").strip() if soup_deniz else "Lösung erstellt."
 
                     state["tasks_history"].append({
                         "id": hw_id,
@@ -555,7 +576,9 @@ def main():
                         "due_date": due_fmt,
                         "title": clean_topic,
                         "task_raw": hw_text,
-                        "solution_summary": summary_text[:1200],
+                        "solution_deniz": text_deniz[:1500],
+                        "solution_bruno": text_bruno[:1500],
+                        "solution_summary": text_deniz[:1500],
                         "created_at": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     })
                     save_bot_state(state)

@@ -309,12 +309,12 @@ function renderTasks(tasks) {
     const cardId = `task-sol-${idx}`;
     const subjClass = getSubjectClass(task.subject);
 
-    // Passe Text an ausgewählte Person an
-    let solutionText = task.solution_summary || 'Ausarbeitung wird geladen...';
+    // Wähle echte getrennte Lösung für die ausgewählte Person
+    let solutionText = '';
     if (currentPerson === 'bruno') {
-      solutionText = solutionText.replace(/Deniz Tursun/g, "Bruno").replace(/Deniz/g, "Bruno");
+      solutionText = task.solution_bruno || (task.solution_summary ? task.solution_summary.replace(/Deniz Tursun/g, "Bruno").replace(/Deniz/g, "Bruno") : 'Ausarbeitung Bruno wird geladen...');
     } else {
-      solutionText = solutionText.replace(/^Bruno\b/m, "Deniz Tursun");
+      solutionText = task.solution_deniz || task.solution_summary || 'Ausarbeitung Deniz wird geladen...';
     }
 
     card.innerHTML = `
